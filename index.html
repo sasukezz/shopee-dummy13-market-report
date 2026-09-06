@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee 多站点市场认知与 dummy13 实战（运营版图解）</title>
+  <style>
+    /* ============================================================
+   Document Renderer — Self-contained CSS
+   Dark theme, modern typography, responsive layout
+   ============================================================ */
+
+    /* --- Reset & Base --- */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0f1117;
+      --bg-card: #161822;
+      --bg-code: #1c1f2e;
+      --bg-table-alt: #1a1d2b;
+      --bg-hover: #22263a;
+      --border: #2a2e42;
+      --text: #d4d7e5;
+      --text-dim: #8b90a5;
+      --text-heading: #eef0f8;
+      --accent: #6c8cff;
+      --accent-dim: #4a6ad4;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --info-bg: #172040;
+      --info-border: #2d4a9e;
+      --warn-bg: #2d2510;
+      --warn-border: #8b6914;
+      --danger-bg: #2d1518;
+      --danger-border: #9e2d35;
+      --tip-bg: #102d1a;
+      --tip-border: #1a8a3e;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, .35);
+      --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      --content-width: 860px;
+      --toc-width: 240px;
+    }
+
+    html {
+      font-size: 15px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- Google Fonts (Inter + Noto Sans SC) loaded inline --- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+    /* --- Layout --- */
+    .page-wrapper {
+      display: flex;
+      max-width: calc(var(--content-width) + var(--toc-width) + 80px);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .toc-sidebar {
+      position: sticky;
+      top: 32px;
+      align-self: flex-start;
+      width: var(--toc-width);
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      padding: 20px 16px 20px 0;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      margin-right: 32px;
+    }
+
+    .toc-sidebar::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .toc-sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .content-main {
+      flex: 1;
+      min-width: 0;
+      max-width: var(--content-width);
+      padding: 40px 0 120px;
+    }
+
+    /* --- TOC --- */
+    .toc-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-list li {
+      margin: 2px 0;
+    }
+
+    .toc-list a {
+      display: block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      transition: all .15s;
+    }
+
+    .toc-list a:hover {
+      color: var(--accent);
+      background: var(--bg-hover);
+    }
+
+    .toc-list .toc-h3 {
+      padding-left: 20px;
+      font-size: 0.78rem;
+    }
+
+    .toc-list .toc-h4 {
+      padding-left: 32px;
+      font-size: 0.75rem;
+    }
+
+    /* --- Typography --- */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--text-heading);
+      font-weight: 600;
+      line-height: 1.35;
+      margin-top: 2.2em;
+      margin-bottom: 0.6em;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-top: 0;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+
+    h2 {
+      font-size: 1.55rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    h4 {
+      font-size: 1.05rem;
+    }
+
+    h5 {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+
+    p {
+      margin-bottom: 1em;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+
+    a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    strong {
+      color: var(--text-heading);
+      font-weight: 600;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    /* --- Lists --- */
+    ul,
+    ol {
+      padding-left: 1.6em;
+      margin-bottom: 1em;
+    }
+
+    li {
+      margin-bottom: 0.35em;
+    }
+
+    li>ul,
+    li>ol {
+      margin-top: 0.3em;
+      margin-bottom: 0.3em;
+    }
+
+    /* Checklist style */
+    li:has(> input[type="checkbox"]) {
+      list-style: none;
+      margin-left: -1.2em;
+    }
+
+    input[type="checkbox"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 3px;
+      vertical-align: -3px;
+      margin-right: 6px;
+      cursor: default;
+    }
+
+    input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.5 4.5l-7 7L3 8'/%3E%3C/svg%3E");
+    }
+
+    /* --- Tables --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2em 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    thead {
+      background: var(--bg-code);
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--text-heading);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--bg-table-alt);
+    }
+
+    tbody tr:hover {
+      background: var(--bg-hover);
+    }
+
+    /* --- Code --- */
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: var(--bg-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+    }
+
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 1.2em 0;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    /* --- Blockquotes / Alerts --- */
+    blockquote {
+      border-left: 3px solid var(--accent-dim);
+      background: var(--info-bg);
+      padding: 14px 18px;
+      margin: 1.2em 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: var(--text);
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* GitHub-style alerts */
+    .alert {
+      padding: 14px 18px;
+      margin: 1.2em 0;
+      border-radius: var(--radius);
+      border-left: 4px solid;
+    }
+
+    .alert-note {
+      background: var(--info-bg);
+      border-color: var(--accent);
+    }
+
+    .alert-tip {
+      background: var(--tip-bg);
+      border-color: var(--success);
+    }
+
+    .alert-important {
+      background: var(--info-bg);
+      border-color: var(--accent);
+    }
+
+    .alert-warning {
+      background: var(--warn-bg);
+      border-color: var(--warning);
+    }
+
+    .alert-caution {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    .alert-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .alert-note .alert-title {
+      color: var(--accent);
+    }
+
+    .alert-tip .alert-title {
+      color: var(--success);
+    }
+
+    .alert-important .alert-title {
+      color: var(--accent);
+    }
+
+    .alert-warning .alert-title {
+      color: var(--warning);
+    }
+
+    .alert-caution .alert-title {
+      color: var(--danger);
+    }
+
+    /* --- Horizontal Rules --- */
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--border);
+      margin: 2.5em 0;
+    }
+
+    /* --- Details / Collapse (for compressed mode) --- */
+    details {
+      margin: 1em 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    details[open] {
+      box-shadow: var(--shadow);
+    }
+
+    summary {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--bg-code);
+      user-select: none;
+      transition: background .15s;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: '▶';
+      font-size: 0.7em;
+      transition: transform .2s;
+      display: inline-block;
+    }
+
+    details[open]>summary::before {
+      transform: rotate(90deg);
+    }
+
+    summary:hover {
+      background: var(--bg-hover);
+    }
+
+    details>.details-content {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      animation: slideDown .2s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* --- Compressed-mode summary card --- */
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 0.8em 0;
+      border-left: 3px solid var(--accent);
+    }
+
+    .summary-card p {
+      margin-bottom: 0.4em;
+    }
+
+    .summary-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* --- Emoji badges --- */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      font-weight: 500;
+    }
+
+    .badge-yes {
+      background: #0d3320;
+      color: var(--success);
+    }
+
+    .badge-no {
+      background: #2d1518;
+      color: var(--danger);
+    }
+
+    .badge-warn {
+      background: #2d2510;
+      color: var(--warning);
+    }
+
+    /* --- Meta header --- */
+    .doc-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    .doc-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* --- Back to top --- */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      transform: translateY(12px);
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--accent-dim);
+    }
+
+    /* --- Theme Groups: TOC hierarchy (added by /restructure) --- */
+    .toc-group {
+      margin-bottom: 4px;
+    }
+
+    .toc-group-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+      transition: background .15s;
+    }
+
+    .toc-group-title:hover {
+      background: var(--bg-hover);
+    }
+
+    .toc-group-title::before {
+      content: '▾';
+      font-size: .65rem;
+      transition: transform .2s;
+      display: inline-block;
+      width: 10px;
+      flex-shrink: 0;
+    }
+
+    .toc-group.collapsed .toc-group-title::before {
+      transform: rotate(-90deg);
+    }
+
+    .toc-group-items {
+      list-style: none;
+      overflow: hidden;
+      max-height: 500px;
+      transition: max-height .3s ease, opacity .2s;
+      opacity: 1;
+    }
+
+    .toc-group.collapsed .toc-group-items {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .toc-group-items li {
+      margin: 1px 0;
+    }
+
+    .toc-group-items li>a {
+      display: block;
+      padding: 3px 8px 3px 26px;
+      border-radius: 0 4px 4px 0;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: .8rem;
+      line-height: 1.45;
+      border-left: 2px solid transparent;
+      transition: all .15s;
+    }
+
+    .toc-group-items li>a:hover {
+      color: var(--accent);
+      background: var(--bg-hover);
+      border-left-color: var(--accent);
+    }
+
+    .toc-group-items li.toc-h3>a {
+      padding-left: 38px;
+      font-size: .76rem;
+      opacity: .7;
+      border-left: 1px solid var(--border);
+      margin-left: 10px;
+    }
+
+    .toc-group-items li.toc-h3>a:hover {
+      opacity: 1;
+      border-left-color: var(--accent);
+    }
+
+    /* --- TOC Toggle Button --- */
+    .toc-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 4px 10px;
+      margin: 8px 0 12px;
+      font-size: .7rem;
+      color: var(--text-dim);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+
+    .toc-toggle:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .toc-toggle .toggle-icon {
+      transition: transform .2s;
+    }
+
+    .toc-toggle.expanded .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* --- Section Divider: full-width card banner --- */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      margin: 2.5em 0 1.5em;
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(88, 166, 255, 0.06) 100%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .section-divider-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .section-divider-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .section-divider-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      margin-bottom: 2px;
+    }
+
+    .section-divider-summary {
+      font-size: .85rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 960px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+
+      .toc-sidebar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        margin-right: 0;
+        margin-bottom: 24px;
+        padding: 16px 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      html {
+        font-size: 14px;
+      }
+
+      .content-main {
+        padding: 24px 0 80px;
+      }
+
+      th,
+      td {
+        padding: 7px 10px;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* --- Print --- */
+    @media print {
+      :root {
+        --bg: #fff;
+        --text: #1a1a1a;
+        --text-heading: #000;
+        --border: #ddd;
+        --bg-code: #f5f5f5;
+        --bg-card: #fafafa;
+        --bg-table-alt: #f8f8f8;
+      }
+
+      body {
+        font-size: 11pt;
+      }
+
+      .toc-sidebar,
+      .back-to-top {
+        display: none;
+      }
+
+      .content-main {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      details {
+        border: 1px solid #ccc;
+      }
+
+      summary {
+        background: #eee;
+      }
+
+      pre {
+        border: 1px solid #ddd;
+      }
+
+      a {
+        color: #1a1a1a;
+        text-decoration: underline;
+      }
+
+      table {
+        box-shadow: none;
+      }
+    }
+
+    /* --- Compressed-mode: Concept Graph Section --- */
+    .concept-overview {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin: 1.5em 0;
+    }
+
+    .concept-overview h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    /* --- Mermaid diagrams --- */
+    .mermaid {
+      margin: 1.2em 0;
+      text-align: center;
+      position: relative;
+      cursor: zoom-in;
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mermaid::after {
+      content: '⤢ 点击放大';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      opacity: 0;
+      transition: opacity .2s;
+      pointer-events: none;
+    }
+
+    .mermaid:hover::after {
+      opacity: 1;
+    }
+
+    /* --- Mermaid fullscreen overlay --- */
+    .mermaid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .mermaid-overlay.visible {
+      opacity: 1;
+    }
+
+    .mermaid-overlay.dragging {
+      cursor: grabbing;
+    }
+
+    .mermaid-overlay .overlay-svg-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .mermaid-overlay .overlay-svg-wrap svg {
+      max-width: none;
+      max-height: none;
+    }
+
+    .mermaid-overlay .overlay-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 10000;
+    }
+
+    .mermaid-overlay .overlay-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      transition: background .15s;
+    }
+
+    .mermaid-overlay .overlay-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .mermaid-overlay .overlay-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    /* --- Concept cards grid --- */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 1.2em 0;
+    }
+
+    .concept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .concept-card:hover {
+      border-color: var(--accent-dim);
+      box-shadow: var(--shadow);
+    }
+
+    .concept-card .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .concept-card .card-title {
+      font-weight: 600;
+      color: var(--text-heading);
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .concept-card .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .concept-card .card-tag {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tag-easy {
+      background: #0d3320;
+      color: var(--success);
+    }
+
+    .tag-medium {
+      background: #2d2510;
+      color: var(--warning);
+    }
+
+    .tag-hard {
+      background: #2d1518;
+      color: var(--danger);
+    }
+
+    /* --- Key-value pairs --- */
+    .kv-list {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px 16px;
+      margin: 1em 0;
+      font-size: 0.9rem;
+    }
+
+    .kv-key {
+      color: var(--text-dim);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .kv-val {
+      color: var(--text);
+    }
+
+    /* --- Decision flow --- */
+    .decision-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin: 1.5em 0;
+      border-left: 4px solid var(--accent);
+    }
+
+    .decision-box h4 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    /* --- Section spacing for compressed mode --- */
+    .section-spacer {
+      height: 2em;
+    }
+
+    /* --- Original text reference --- */
+    .source-ref {
+      margin-top: 1.5em;
+    }
+
+    .source-ref>summary {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      padding: 8px 14px;
+    }
+
+    .source-ref>.details-content {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'dark', themeVariables: { primaryColor: '#2d4a9e', primaryTextColor: '#d4d7e5', primaryBorderColor: '#4a6ad4', lineColor: '#6c8cff', secondaryColor: '#1c1f2e', tertiaryColor: '#161822', background: '#0f1117', mainBkg: '#161822', nodeBorder: '#4a6ad4', clusterBkg: '#1a1d2b', clusterBorder: '#2a2e42', titleColor: '#eef0f8', edgeLabelBackground: '#1c1f2e', fontSize: '14px' } });</script>
+</head>
+
+<body>
+
+  <div class="page-wrapper">
+    <!-- TOC sidebar -->
+    <nav class="toc-sidebar" id="toc">
+      <div class="toc-title">目录</div>
+      <ul class="toc-list">
+        <li class="toc-h2"><a href="#摘要">摘要</a></li>
+<li class="toc-h2"><a href="#1-多站点格局三个世界">1. 多站点格局：三个世界</a></li>
+<li class="toc-h3"><a href="#11-份额大还是份额小的地方该去份额-效率四象限">1.1 份额大还是份额小的地方该去？——份额 × 效率四象限</a></li>
+<li class="toc-h2"><a href="#2-本土店-vs-跨境店分工而非对手">2. 本土店 vs 跨境店：分工，而非对手</a></li>
+<li class="toc-h2"><a href="#3-热销店铺全景三站榜单与四种路径">3. 热销店铺全景：三站榜单与四种路径</a></li>
+<li class="toc-h2"><a href="#4-价格带与产品结构">4. 价格带与产品结构</a></li>
+<li class="toc-h3"><a href="#41-品线示例商品点图跳转-shopee-商品页">4.1 品线示例商品（点图跳转 Shopee 商品页）</a></li>
+<li class="toc-h2"><a href="#5-dummy13-竞争全景与演化规律">5. dummy13 竞争全景与演化规律</a></li>
+<li class="toc-h2"><a href="#6-我们的战略选择">6. 我们的战略选择</a></li>
+<li class="toc-h2"><a href="#7-运营循环与红线">7. 运营循环与红线</a></li>
+<li class="toc-h2"><a href="#附关键数字卡">附：关键数字卡</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main class="content-main" id="content">
+      <div class="doc-meta">
+        <span>📄 content\reports\shopee-dummy13-market-logic-report.md</span>
+        <span>🕐 渲染时间：2026-09-06 20:11</span>
+        <span>📊 模式：完整模式</span>
+      </div>
+
+      <h1 id="shopee-多站点市场认知与-dummy13-实战运营版图解">Shopee 多站点市场认知与 dummy13 实战（运营版图解）</h1>
+<blockquote>
+<p>话题: KB2046/crossborder/zhixia-data（模块 01-21 + 整合调研报告）
+调研日期: 2026-09-06（数据快照 2026-09-05/06，知虾）
+信源: 21 个数据模块（TW/PH 类目级 ×11 · 全站 API ×4 · 店铺榜 ×4 · 关键词 ×12 · 产品解剖 ×8 店）
+状态: 已审阅 · <strong>结构：第一部分市场认知（§1-4）→ 第二部分实战打法（§5-7）</strong></p>
+</blockquote>
+<h2 id="摘要">摘要</h2>
+<p>先看懂平台，再谈打法。<strong>第一部分</strong>建立五个基础认知：9 个站点是三个世界（CB 主场/可活/沙漠）；本土店与跨境店是分工不是对手（本土做量、跨境做值）——但收藏品线在 PH 是例外（CB 占 45%）；热销店铺有四种可辨识的成功路径；价格带是哑铃型、中间是死位；产品结构上"均价越高、IP 越密、合规越重的类目 CB 越弱"。<strong>第二部分</strong>才回答 dummy13 和其他商品怎么落：对标谁、定什么价、上什么品牌货、按什么节奏循环。</p>
+<div class="section-spacer"></div>
+
+<h1 id="第一部分-市场基础认知">第一部分 · 市场基础认知</h1>
+<h2 id="1-多站点格局三个世界">1. 多站点格局：三个世界</h2>
+<div class="mermaid">
+xychart-beta
+    title "九站点跨境件量份额（%）"
+    x-axis ["印尼", "台湾", "越南", "墨西哥", "泰国", "马来", "菲律宾", "巴西", "新加坡"]
+    y-axis "CB 件量份额 %" 0 --> 32
+    bar [0, 1.0, 3.5, 5.2, 5.9, 13.9, 14.0, 30.1, 30.8]
+</div>
+
+<table>
+<thead>
+<tr>
+<th>梯队</th>
+<th>站点</th>
+<th>平台件量规模</th>
+<th>跨境生态特征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CB 主场</strong> ~30%</td>
+<td>新加坡 30.8% / 巴西 30.1%</td>
+<td>小盘 / 中盘</td>
+<td>SG=官方品牌店垄断收藏品头部；BR=<strong>收藏品线 CB 86%、单店 4× 本土</strong>，中国卖家成熟阵地</td>
+</tr>
+<tr>
+<td><strong>CB 可活</strong> ~14%</td>
+<td><strong>菲律宾 14.0%</strong> / 马来 13.9%</td>
+<td>中盘</td>
+<td><strong>PH=CB 上新全平台第一（32.1% 的跨境新供给投这里）</strong>；收藏品线 CB 份额 45%，是行业极值</td>
+</tr>
+<tr>
+<td><strong>CB 沙漠</strong> ≤6%</td>
+<td>泰国 5.9% / 越南 3.5% / 台湾 1.0% / 印尼 0（政策禁入）</td>
+<td>大盘</td>
+<td>TW 开 CB 店最多、卖得动最少（僵尸指数 0.062 全站最低）——是市场结构问题，不是运营问题</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三个基础事实</strong>：①全平台 CB 在增长（30 日 GMV +23.6%、件量 +18.8%，均快于本土）——跨境不是收缩赛道；②CB 大盘"开店多、动销少"（在售店铺份额 21.6% → 动销 10.2% → 件量 7.4%）；③<strong>同一个类目换个站就是两个世界</strong>——见下节。</p>
+<h3 id="11-份额大还是份额小的地方该去份额-效率四象限">1.1 份额大还是份额小的地方该去？——份额 × 效率四象限</h3>
+<p><strong>份额是结果指标，不是机会指标</strong>：高份额可能意味着"跨境模式已被验证"（顺风），也可能意味着"头部已锁死"（挤不进）；低份额可能是"结构性沙漠"（怎么努力都没用），也可能是"尚未开发的荒地"（最大机会）。<strong>判别钥匙是 CB 相对效率（CB 单店/单链接产出 ÷ 本土）——它衡量的是这个市场对跨境是否结构友好</strong>：</p>
+<div class="mermaid">
+quadrantChart
+    title CB 份额 × CB 相对效率（九站点位）
+    x-axis "低 CB 份额" --> "高 CB 份额"
+    y-axis "CB 效率 ≪ 本土" --> "CB 效率 ≥ 本土"
+    quadrant-1 "顺风主场：进"
+    quadrant-2 "错位荒地：最佳"
+    quadrant-3 "结构沙漠：弃"
+    quadrant-4 "虚高锁定：难"
+    "BR 收藏品": [0.86, 0.95]
+    "MX 收藏品": [0.91, 0.70]
+    "PH 收藏品": [0.45, 0.88]
+    "SG 收藏品": [0.26, 0.62]
+    "MY 收藏品": [0.27, 0.58]
+    "TH 收藏品": [0.07, 0.41]
+    "TW 公仔": [0.01, 0.13]
+</div>
+
+<p>（VN 单店样本 n=1 不入图——CB 生态近乎不存在，"荒地假说"店铺级不成立，待类目级数据终审。）</p>
+<table>
+<thead>
+<tr>
+<th>象限</th>
+<th>案例</th>
+<th>数字</th>
+<th>判决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高份额 × 高效率 = <strong>顺风主场</strong></td>
+<td>BR 收藏品线</td>
+<td>CB 61/100 家、榜内 86%、单店 4× 本土</td>
+<td>进——市场已接受 CB，且不寡头（top3 仅 8.8%），新店通道开</td>
+</tr>
+<tr>
+<td><strong>中份额 × 高效率 = 错位荒地（最佳）</strong></td>
+<td>PH 收藏品线</td>
+<td>站点整体 CB 仅 14%，但收藏品类目 CB 45%、效率 104%、top3 仅 4.0% 最分散</td>
+<td><strong>主攻</strong>——站级不拥挤 × 类目级 CB 极强，供需错位=增量空间</td>
+</tr>
+<tr>
+<td>高份额 × 中低效率 = 虚高锁定</td>
+<td>SG 收藏品线</td>
+<td>榜内 CB 26%，但单店仅本土 77%、top3 官方垄断 20.6%</td>
+<td>头部被品牌官方店锁死，量被平台大盘撑起来——难</td>
+</tr>
+<tr>
+<td>低份额 × 低效率 = 结构沙漠</td>
+<td>TW 公仔</td>
+<td>CB 1.08%、效率 11%、僵尸指数 0.062</td>
+<td>弃（只做溢价慢生意或 DIY Kit 形态例外）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>三个修正变量</strong>（四象限定位后再审）：
+① <strong>成因检验（三变量模型）</strong>：低份额若源于结构变量（本地履约依赖/地板垄断/合规墙）= 沙漠坐实；若结构友好却份额低 = 荒地坐实（VN/TH 待验证——正是三变量模型跨站检验的目的）；
+② <strong>集中度</strong>：top3/top10 份额——同样高份额，BR（8.8%）可进、SG（20.6%）难进；PH 4.0% 最易切；
+③ <strong>增量信号</strong>：CB 上新流向（PH 吃 32.1% = 卖家真金白银投票）+ 长尾存活率（19 号：me-too 涌入但流量不动——供给拥挤的市场要靠差异化，不能纯跟款）。</p>
+<p><strong>一句话</strong>：不去"份额大的地方"也不去"份额小的地方"，去 <strong>"效率高（结构友好）× 集中度低（可切入）× 仍有增量"</strong> 的地方——PH 是站点与类目的错位带所以主攻，BR 是顺风主场所以列为扩站首选，SG/TW 分别输在锁定与沙漠。<strong>同一框架在站内选类目时复用</strong>（PH 站内：公仔 45% 高份额高效率 = 主类目；婴幼 6% 低份额低效率 = 沙漠不进）。</p>
+<div class="section-spacer"></div>
+
+<h2 id="2-本土店-vs-跨境店分工而非对手">2. 本土店 vs 跨境店：分工，而非对手</h2>
+<p><strong>全平台普遍规律</strong>（本土动销率 9.14% vs CB 3.76%）：本土赢在履约与信任，跨境赢在供给与价差。两者在市场里各占生态位：</p>
+<div class="mermaid">
+graph LR
+    subgraph LOCAL["本土店生态位"]
+        A1["地板量生意<br/>超低价带垄断<br/>（TW 公仔地板 87% 件量）"]
+        A2["次日达履约<br/>本土仓辐射"]
+        A3["品牌官方商城<br/>（POP MART/Mattel）"]
+    end
+    subgraph CB["跨境店生态位"]
+        B1["价值带生意<br/>中高价 + 概念创新"]
+        B2["无本地渠道品牌<br/>的跨境供给（3P/白牌）"]
+        B3["快反上新<br/>月度级扫爆款"]
+    end
+    LOCAL <-->|"PH 收藏品线例外：<br/>CB 正面竞争且份额 45%"| CB
+</div>
+
+<p><strong>例外市场（我们的战场）</strong>——同一个"人偶、公仔"类目，两站对照：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>TW 公仔</th>
+<th>PH 人偶公仔</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CB 件量份额</strong></td>
+<td>1.08%</td>
+<td><strong>45.4%（42 倍差）</strong></td>
+</tr>
+<tr>
+<td>CB GMV 份额</td>
+<td>~5.4%</td>
+<td><strong>46.8%</strong></td>
+</tr>
+<tr>
+<td>CB 单链接效率（vs 本土）</td>
+<td>11%（靠 5.2× 溢价生存）</td>
+<td><strong>104%（正面对等）</strong></td>
+</tr>
+<tr>
+<td>地板带件量占比</td>
+<td>86.6%（本土地板垄断）</td>
+<td>5.3%（无地板依赖）</td>
+</tr>
+<tr>
+<td>CB 周 GMV 绝对值</td>
+<td>~NT$234 万</td>
+<td>≈NT$966 万（<strong>4.1×</strong>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>dummy13 细分市场里的角色分工</strong>（300 竞品实证）：本土 141 品均价 ₱41 做地摊量；跨境 89 品均价 ₱272——<strong>CB 用 1/3 的件量拿 2.3× 的 GMV</strong>。</p>
+<div class="section-spacer"></div>
+
+<h2 id="3-热销店铺全景三站榜单与四种路径">3. 热销店铺全景：三站榜单与四种路径</h2>
+<p><strong>收藏品 top100 店铺九站全景</strong>（周口径，按 CB GMV 份额降序）：</p>
+<table>
+<thead>
+<tr>
+<th>站点</th>
+<th>CB/本土</th>
+<th>CB 榜内 GMV</th>
+<th><strong>CB 单店 ÷ 本土</strong></th>
+<th>top3 集中度</th>
+<th>判决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MX</td>
+<td>85/2/13未</td>
+<td><strong>90.9%</strong></td>
+<td>236%</td>
+<td>19.5%</td>
+<td>顺风但小盘（≈￥69 万/周，进前必核）</td>
+</tr>
+<tr>
+<td><strong>BR</strong></td>
+<td><strong>61/39</strong></td>
+<td><strong>86.3%</strong></td>
+<td><strong>402%</strong></td>
+<td>8.8%</td>
+<td><strong>顺风主场（扩站首选）</strong></td>
+</tr>
+<tr>
+<td>PH</td>
+<td>27/73</td>
+<td>28.6%</td>
+<td><strong>108%</strong></td>
+<td><strong>4.0%</strong></td>
+<td><strong>错位荒地（主攻）</strong></td>
+</tr>
+<tr>
+<td>MY</td>
+<td>30/70</td>
+<td>26.6%</td>
+<td>84%</td>
+<td><strong>32.7%</strong></td>
+<td>虚高锁定（POP MART MY 官方垄断）</td>
+</tr>
+<tr>
+<td>SG</td>
+<td>31/69</td>
+<td>25.8%</td>
+<td>77%</td>
+<td>20.6%</td>
+<td>虚高锁定</td>
+</tr>
+<tr>
+<td>TH</td>
+<td>16/84</td>
+<td>7.3%</td>
+<td><strong>41%</strong></td>
+<td>2.3%</td>
+<td>半沙漠（品牌 CB 商城店是唯一头部形态）</td>
+</tr>
+<tr>
+<td>VN</td>
+<td>1/99</td>
+<td>6.1%（n=1）</td>
+<td>n=1 不可推</td>
+<td>9.4%</td>
+<td>待判（CB 生态近乎不存在）</td>
+</tr>
+<tr>
+<td>TW</td>
+<td>4/85</td>
+<td><strong>1.0%</strong></td>
+<td>24%</td>
+<td>1.8%</td>
+<td>结构沙漠（三口径闭环）</td>
+</tr>
+<tr>
+<td>ID</td>
+<td>0/100</td>
+<td>0%</td>
+<td>—</td>
+<td>20.3%</td>
+<td>政策禁入（品牌在 ID 开本土店绕行）</td>
+</tr>
+</tbody>
+</table>
+<p>读法：<strong>中间带三站三种命运</strong>——PH 是唯一"效率反超+最分散"的错位荒地；MY/SG 被 POP MART 等品牌官方店锁死头部（效率 77-84%）；TH 本土拼装文化太强 CB 效率仅 41%。MX 是迷你 BR 但盘小且有数据张力。另两个跨站规律：<strong>品牌身份切换</strong>（POP MART 五站四店型按政策切换本土/CB）和<strong>跨站连锁 CB 店</strong>（I love dolls 同时是 PH 榜高价垂类 + MY 榜 CB 第一——单站验证后跨站复制是 CB 店的成长路径）。</p>
+<p><strong>CB 店的四种成功路径</strong>（热销店实证归纳）：</p>
+<div class="mermaid">
+graph TD
+    R["CB 热销店的四种路径"] --> P1["① 白牌兼容生态<br/>mech player<br/>3P 高达系 均价₱2,520"]
+    R --> P2["② IP 正品转售<br/>bestfuture<br/>Funko/SHF 均价₱365"]
+    R --> P3["③ 品牌直营<br/>BLOKEES<br/>积木人 ₱1,445 月度上新"]
+    R --> P4["④ meme 快反<br/>xiangnidexingfu8<br/>概念池+双类目挂载"]
+</div>
+
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>样板店数字</th>
+<th>经济性</th>
+<th>对我们的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 白牌兼容</td>
+<td>mech player：₱2,520 均价、top20 均 GMV ₱19.3 万/SKU</td>
+<td>高价低频，淘宝可溯源</td>
+<td>高端天花板参照</td>
+</tr>
+<tr>
+<td>② 正品转售</td>
+<td>bestfuture：₱365、₱2.7 万/SKU</td>
+<td>赚价差不赚规模</td>
+<td>天花板低，谨慎</td>
+</tr>
+<tr>
+<td>③ 品牌直营</td>
+<td>BLOKEES：新品 856 件/30 天 @₱1,159</td>
+<td>高均价×单品规模兼得</td>
+<td><strong>dummy13 品牌线对标</strong></td>
+</tr>
+<tr>
+<td>④ meme 快反</td>
+<td>xiangnidexingfu8：Tung Tung 双链接 1.6 万件/月</td>
+<td>概念窗口以周计</td>
+<td><strong>上新节奏对标</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>本土地板玩家不是低劣跟风者</strong>（BLACKLIGHT 前台解剖）：优选 tier + 划线价锚定（₱80→₱35）+ 11 色变体矩阵 + 本土仓次日达 + 双链接并行——<strong>成熟的地摊工业化</strong>；其结构性弱点只有拼装体验差与履约半径。</p>
+<p><strong>单品依赖度谱系</strong>（五店实测）：正版潮玩 83% &gt; meme 潮 69% &gt; 快反工厂 35%（top3 87%）&gt; 铺货店 32% &gt; 3P 拼装 10%——押中爆款则依赖度高是路径属性，不是病。</p>
+<div class="section-spacer"></div>
+
+<h2 id="4-价格带与产品结构">4. 价格带与产品结构</h2>
+<p><strong>PH 六节点产品结构</strong>（收藏品线 + 母婴玩具线，周口径）：</p>
+<div class="mermaid">
+xychart-beta
+    title "PH 六节点 CB 件量份额（%）"
+    x-axis ["婴幼玩具", "组装模型", "积木玩具", "动漫周边", "雕像", "公仔"]
+    y-axis "CB 件量份额 %" 0 --> 50
+    bar [6.3, 17.0, 15.8, 23.0, 34.9, 45.4]
+</div>
+
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>件量/周</th>
+<th>周GMV</th>
+<th>隐含均价</th>
+<th>CB 份额</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人偶、公仔</td>
+<td>80,292</td>
+<td>₱4,031 万</td>
+<td>₱502</td>
+<td><strong>45.4%</strong></td>
+<td>CB 主场，结构健康</td>
+</tr>
+<tr>
+<td>雕像、雕塑</td>
+<td>7,875</td>
+<td>₱250 万</td>
+<td>₱318</td>
+<td>34.9%</td>
+<td>小盘但 CB 强</td>
+</tr>
+<tr>
+<td>动漫周边</td>
+<td>29,802</td>
+<td>₱950 万</td>
+<td>₱319</td>
+<td>23.0%</td>
+<td>IP 门槛，铺货不出货</td>
+</tr>
+<tr>
+<td>组装模型</td>
+<td>15,703</td>
+<td>₱2,231 万</td>
+<td>₱1,421</td>
+<td>17.0%</td>
+<td>84.5% GMV 在 ₱880+</td>
+</tr>
+<tr>
+<td>积木玩具</td>
+<td>96,830</td>
+<td>₱2,028 万</td>
+<td>₱209</td>
+<td>15.8%</td>
+<td>乐高表述红线，兼容件可上</td>
+</tr>
+<tr>
+<td>婴幼玩具</td>
+<td>109,758</td>
+<td>₱4,297 万</td>
+<td>₱391</td>
+<td>6.3%</td>
+<td>合规墙外</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么 CB 份额差这么远——三变量模型</strong>（六节点验证）：</p>
+<div class="mermaid">
+graph LR
+    A["节点均价 ↓"] --> E["CB 份额"]
+    B["IP 密度 ↓"] --> E
+    C["合规密度 ↓"] --> E
+    E --> F["公仔45% vs 婴幼6%<br/>均价同档 → 合规密度主效应"]
+    E --> G["动漫23% vs 雕像35%<br/>均价相同 → IP 密度主效应"]
+</div>
+
+<p><strong>价格带是哑铃型，中间是死位</strong>（300 个 dummy13 竞品实证，跨站复现）：</p>
+<div class="mermaid">
+graph LR
+    A["地板带 &lt;₱50<br/>本土垄断<br/>124 品=72% 件量"] --- B["死亡带 ₱50-200 ✗<br/>142 品仅 13% 件量<br/>双方都不赚钱"]
+    B --- C["CB 价值带 ₱200-500<br/>32 品=56% GMV<br/>跨境主场"]
+    C --- D["品牌带 ₱1,000-1,400<br/>BLOKEES 实证"]
+    D --- E["高端带 ₱1,800+<br/>3P 拼装"]
+</div>
+
+<p><strong>其他玩具线的选品价格带</strong>（CB 有量的区间）：</p>
+<table>
+<thead>
+<tr>
+<th>品线</th>
+<th>价格带</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>卡牌/photocard（KPop/BINI/宝可梦）</td>
+<td>₱40-254</td>
+<td>最低成本变现（₱105 卡月销 2.5 万件）</td>
+</tr>
+<tr>
+<td>3D 打印 meme 摆件（TIV2 等）</td>
+<td>₱230-344</td>
+<td>共款扩散快</td>
+</tr>
+<tr>
+<td>盲盒/潮玩正品转售</td>
+<td>₱86-621</td>
+<td>需正品货源</td>
+</tr>
+<tr>
+<td>拼装/DIY 套件</td>
+<td>₱1,000-1,400 / 3P ₱1,800-3,500</td>
+<td>高价低频</td>
+</tr>
+<tr>
+<td>squishy/解压</td>
+<td>₱85-192</td>
+<td>铺货补充</td>
+</tr>
+<tr>
+<td>雕像/展示品</td>
+<td>₱388-776</td>
+<td>CB 高价带</td>
+</tr>
+<tr>
+<td>积木兼容件</td>
+<td>₱238-476</td>
+<td>乐高表述红线——转售/兼容件可上（见 §7 红线澄清）</td>
+</tr>
+<tr>
+<td>毛绒</td>
+<td>₱86-292</td>
+<td>14+ 表述注意（类目可挂）</td>
+</tr>
+<tr>
+<td>婴幼玩具</td>
+<td>不进</td>
+<td>自研合规墙（儿童用品安全标准）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="41-品线示例商品点图跳转-shopee-商品页">4.1 品线示例商品（点图跳转 Shopee 商品页）</h3>
+<table>
+<thead>
+<tr>
+<th>品线</th>
+<th>示例（点击跳转）</th>
+<th>价格</th>
+<th>月销</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>卡牌 · KPopDH 小卡</td>
+<td><a href="https://shopee.ph/product/767623904/42409623488"><img src="shopee-report-assets/kpopdh-photocard.jpg" height="80" alt="KPopDH photocard"></a></td>
+<td>₱105</td>
+<td>25,473</td>
+<td>ylfwtjkgl88 · 919 件/天</td>
+</tr>
+<tr>
+<td>卡牌 · BINI（PH 本土女团）</td>
+<td><a href="https://shopee.ph/product/310503257/26461290157"><img src="shopee-report-assets/bini-cards.jpg" height="80" alt="BINI cards"></a></td>
+<td>₱52-168</td>
+<td>2,379</td>
+<td>xiaomzx1 · 累计 30 万件</td>
+</tr>
+<tr>
+<td>卡牌 · 宝可梦卡组</td>
+<td><a href="https://shopee.ph/product/310503257/23750332609"><img src="shopee-report-assets/pokemon-cards.jpg" height="80" alt="Pokemon cards"></a></td>
+<td>₱212</td>
+<td>9,665</td>
+<td>环比 +275% 爆发中</td>
+</tr>
+<tr>
+<td>3D 打印 meme · TIV2 风追车</td>
+<td><a href="https://shopee.ph/product/310503257/55214021439"><img src="shopee-report-assets/tiv2-car.jpg" height="80" alt="TIV2"></a></td>
+<td>₱230</td>
+<td>1,217</td>
+<td>三店 7 链接中的最大链</td>
+</tr>
+<tr>
+<td>盲盒 · HIRONO × 小王子</td>
+<td><a href="https://shopee.ph/product/1344630321/49857133420"><img src="shopee-report-assets/hirono-blindbox.jpg" height="80" alt="HIRONO"></a></td>
+<td>₱369</td>
+<td>4,891</td>
+<td>yonghuang 正版精品 · 177 天起量</td>
+</tr>
+<tr>
+<td>拼装 · 3P 高达（SNAA 1/100）</td>
+<td><a href="https://shopee.ph/product/1023692065/46701988049"><img src="shopee-report-assets/snaa-model.jpg" height="80" alt="SNAA"></a></td>
+<td>₱1,815</td>
+<td>158</td>
+<td>mech player 白牌兼容路径</td>
+</tr>
+<tr>
+<td>拼装 · BLOKEES 积木人（Marvel）</td>
+<td><a href="https://shopee.ph/product/1483189547/58104378951"><img src="shopee-report-assets/blokees-marvel.jpg" height="80" alt="BLOKEES"></a></td>
+<td>₱1,159</td>
+<td>856</td>
+<td>品牌直营对标 · 28.5 件/天</td>
+</tr>
+<tr>
+<td>squishy · Schylling NeeDoh</td>
+<td><a href="https://shopee.ph/product/767623904/53158560657"><img src="shopee-report-assets/needoh-squishy.jpg" height="80" alt="NeeDoh"></a></td>
+<td>₱113</td>
+<td>673</td>
+<td>三店共款铺货</td>
+</tr>
+<tr>
+<td>毛绒 · Sanrio 25cm</td>
+<td><a href="https://shopee.ph/product/310503257/29717953612"><img src="shopee-report-assets/sanrio-plush.jpg" height="80" alt="Sanrio"></a></td>
+<td>₱132</td>
+<td>1,008</td>
+<td>母婴-玩具线挂载（类目可挂）</td>
+</tr>
+<tr>
+<td>积木兼容件 · Minecraft 磁力块</td>
+<td><a href="https://shopee.ph/product/767623904/40600947101"><img src="shopee-report-assets/minecraft-blocks.jpg" height="80" alt="Minecraft blocks"></a></td>
+<td>₱120</td>
+<td>128</td>
+<td>转售可上的积木带</td>
+</tr>
+</tbody>
+</table>
+<p>（图为知虾 2026-09-06 快照的商品主图，链接为 Shopee PH 商品页——若链接失效说明商品已下架/改链，可按品线名搜索同类。）</p>
+<div class="section-spacer"></div>
+
+<h1 id="第二部分-dummy13-与其他商品怎么做">第二部分 · dummy13 与其他商品怎么做</h1>
+<h2 id="5-dummy13-竞争全景与演化规律">5. dummy13 竞争全景与演化规律</h2>
+<p><strong>头部名册</strong>（月销/累计双榜，点图跳转商品页）：</p>
+<table>
+<thead>
+<tr>
+<th>阵营</th>
+<th>商品（点击跳转）</th>
+<th>价格</th>
+<th>月件</th>
+<th>月GMV</th>
+<th>看点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CB·GMV 王</td>
+<td><a href="https://shopee.ph/product/874376824/27323084116"><img src="shopee-report-assets/dva-gmvking.jpg" height="80" alt="Death Vs Angel"></a><br>Death Vs Angel · xiangnidexingfu8</td>
+<td>₱334</td>
+<td>9,108</td>
+<td><strong>₱304 万</strong></td>
+<td>单品=全市场 51% GMV</td>
+</tr>
+<tr>
+<td>CB·中价长销</td>
+<td><a href="https://shopee.ph/product/912813890/29551367080"><img src="shopee-report-assets/lhsj888-lucky13.jpg" height="80" alt="lhsj888 Lucky 13"></a><br>Lucky 13 关节 · lhsj888</td>
+<td>₱106</td>
+<td>806</td>
+<td>₱8.5 万</td>
+<td>累计 50.6 万件长销斜率</td>
+</tr>
+<tr>
+<td>本土·量王</td>
+<td><a href="https://shopee.ph/search?keyword=lucky%2013%20dummy%2013"><img src="shopee-report-assets/dermify-dummy13.jpg" height="80" alt="DERMIFY"></a><br>Lucky 13 dummy 13 · DERMIFY&amp;WHITE</td>
+<td>₱32</td>
+<td>9,662</td>
+<td>₱31 万</td>
+<td>累计 51 万件地摊量（挂玩具机器人节点）</td>
+</tr>
+<tr>
+<td>本土·复刻者</td>
+<td><a href="https://shopee.ph/search?keyword=lucky%2013%20death%20vs%20angel"><img src="shopee-report-assets/blacklight-clone.jpg" height="80" alt="BLACKLIGHT"></a><br>DVA 复刻 · BLACKLIGHT</td>
+<td>₱35</td>
+<td>3,471</td>
+<td>₱12 万</td>
+<td>概念扩散的复刻端</td>
+</tr>
+<tr>
+<td>CB·meme 快反参照</td>
+<td><a href="https://shopee.ph/product/874376824/42953542976"><img src="shopee-report-assets/tungtung-keychain.jpg" height="80" alt="Tung Tung"></a><br>Tung Tung 钥匙扣 · xiangnidexingfu8</td>
+<td>₱64</td>
+<td>10,272</td>
+<td>₱66 万</td>
+<td>挂文具节点的流量位打法</td>
+</tr>
+</tbody>
+</table>
+<p><strong>概念扩散链——最重要的竞争规律</strong>：</p>
+<div class="mermaid">
+graph LR
+    A["CB 原创爆款<br/>₱334 · 9,108件/月"] -->|"数周-数月"| B["本土复刻<br/>₱35 · 优选+11色+次日达"]
+    A -->|"同步横向"| C["CB→CB 共款<br/>TIV2 三店7链"]
+    B --> D["结论: 溢价窗口以周计<br/>上架即推 + 梯度下沉"]
+</div>
+
+<p>长尾在涌入但流量不动（竞品半年 2.6× 而件量仅 +23%）——<strong>纯同款跟随进不了流量，必须差异化（概念/配件/价格带）</strong>。生态扩展信号已出现：坐骑配件、第五代、Titan13——配件线有市场先例。</p>
+<p><strong>关键词</strong>："lucky 13" 纯度 99.6% 首要词；"dummy 13" 62% 噪音只组合用；t13/Nova 13/Titan13 长尾。</p>
+<h2 id="6-我们的战略选择">6. 我们的战略选择</h2>
+<p><strong>定位 = ③品牌直营的形态 × ④快反的节奏</strong>（唯一同时实现高均价 ₱1,000+ 与单品规模 25+ 件/天的路径）。</p>
+<p><strong>定价决策树</strong>：</p>
+<div class="mermaid">
+graph TD
+    S{"这款定什么价？"} -->|"引流档"| A["₱30-48<br/>variation 内 不独立开链"]
+    S -->|"主力档"| B["₱200-500 价值带"]
+    S -->|"概念款"| C["₱300-400<br/>₱334×9,108件/月 实证"]
+    S -->|"DIY Kit 散件"| D["₱1,000-1,400 BLOKEES 带"]
+    S -->|"高端限量"| E["₱1,800+"]
+    S -->|"想定 ₱50-200"| F["✗ 禁止带"]
+</div>
+
+<p><strong>各档位实拍示例</strong>（点图跳转商品页）：</p>
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th>示例</th>
+<th>价格</th>
+<th>月销</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>引流档 ₱30-48</td>
+<td><a href="https://shopee.ph/search?keyword=lucky%2013%20death%20vs%20angel"><img src="shopee-report-assets/blacklight-clone.jpg" height="80" alt="BLACKLIGHT"></a><br>本土复刻款 · BLACKLIGHT</td>
+<td>₱35</td>
+<td>3,471</td>
+</tr>
+<tr>
+<td>主力档 ₱200-500</td>
+<td><a href="https://shopee.ph/product/912813890/28963819852"><img src="shopee-report-assets/lhsj888-dva263.jpg" height="80" alt="lhsj888 DVA"></a><br>DVA 中档版 · lhsj888（跨境）</td>
+<td>₱263</td>
+<td>长销款</td>
+</tr>
+<tr>
+<td>概念款 ₱300-400</td>
+<td><a href="https://shopee.ph/product/874376824/27323084116"><img src="shopee-report-assets/dva-gmvking.jpg" height="80" alt="DVA"></a><br>DVA 原版 · xiangnidexingfu8（跨境）</td>
+<td>₱334</td>
+<td>9,108</td>
+</tr>
+<tr>
+<td>DIY Kit ₱1,000-1,400</td>
+<td><a href="https://shopee.ph/product/1483189547/58104378951"><img src="shopee-report-assets/blokees-marvel.jpg" height="80" alt="BLOKEES"></a><br>BLOKEES Marvel 积木人</td>
+<td>₱1,159</td>
+<td>856</td>
+</tr>
+<tr>
+<td>高端 ₱1,800+</td>
+<td><a href="https://shopee.ph/product/1023692065/46701988049"><img src="shopee-report-assets/snaa-model.jpg" height="80" alt="SNAA"></a><br>SNAA 1/100 拼装 · mech player（跨境）</td>
+<td>₱1,815</td>
+<td>158</td>
+</tr>
+</tbody>
+</table>
+<p><strong>类目与挂载</strong>：主挂人偶公仔；副挂测试=文具节点（低竞争流量位，xiangnidexingfu8 用它月拿 1 万件）+ 玩具机器人（63/300 竞品在挂、DERMIFY 量王所在节点——类目可挂，红线只在表述）；积木节点留作兼容件转售位。标题用 7 组词堆栈：Lucky 13 + Dummy 13 + Multi Jointed + Action Figure + 3D Printed + Mechanical + DIY。</p>
+<p><strong>品牌商品能不能碰</strong>——三层生态合法并存（官方直营 / <strong>正品转售合法</strong> / 白牌），能上，但分档次：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>选项</th>
+<th>示例（点图跳转）</th>
+<th>价格带</th>
+<th>风险</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>白牌 3D 打印 meme</td>
+<td><a href="https://shopee.ph/product/874376824/27323084116"><img src="shopee-report-assets/dva-gmvking.jpg" height="72" alt="DVA"></a></td>
+<td>₱39-344</td>
+<td>窗口短</td>
+<td><strong>主线</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>3P 拼装（SNAA/大班/长龙）</td>
+<td><a href="https://shopee.ph/product/1023692065/46701988049"><img src="shopee-report-assets/snaa-model.jpg" height="72" alt="SNAA"></a></td>
+<td>₱1,800-3,500</td>
+<td>平台容忍（在售2年+）</td>
+<td>可试副线</td>
+</tr>
+<tr>
+<td>3</td>
+<td>无品牌卡牌（BINI/KPopDH）</td>
+<td><a href="https://shopee.ph/product/310503257/26461290157"><img src="shopee-report-assets/bini-cards.jpg" height="72" alt="BINI"></a></td>
+<td>₱40-105</td>
+<td>肖像灰度未被打击</td>
+<td>引流测款</td>
+</tr>
+<tr>
+<td>4</td>
+<td>美系玩具正品（NeeDoh 等）</td>
+<td><a href="https://shopee.ph/product/767623904/53158560657"><img src="shopee-report-assets/needoh-squishy.jpg" height="72" alt="NeeDoh"></a></td>
+<td>₱85-192</td>
+<td>低</td>
+<td>铺货补充</td>
+</tr>
+<tr>
+<td>5</td>
+<td>国际 IP 正品（Funko/SHF）</td>
+<td><a href="https://shopee.ph/product/406423323/18284315069"><img src="shopee-report-assets/funko-keychain.jpg" height="72" alt="Funko"></a></td>
+<td>₱68-1,093</td>
+<td>官方竞争+押款</td>
+<td>谨慎</td>
+</tr>
+<tr>
+<td>6</td>
+<td>国产潮玩正品（POP MART 系）</td>
+<td><a href="https://shopee.ph/product/1344630321/49857133420"><img src="shopee-report-assets/hirono-blindbox.jpg" height="72" alt="HIRONO"></a></td>
+<td>₱86-621</td>
+<td>官方商城直接竞争</td>
+<td>只做长尾组合</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-运营循环与红线">7. 运营循环与红线</h2>
+<div class="mermaid">
+graph TD
+    A["月度上新"] --> B["新概念链接 ₱300-400<br/>7 组词标题"]
+    B --> C["上架即推（广告+引流档）"]
+    C --> D["监控: BLACKLIGHT 复刻信号<br/>共款池撞款 / top10 集中度"]
+    D -->|"被复刻"| E["variation 内梯度下沉<br/>₱125 主力档接量"]
+    E --> A
+</div>
+
+<p><strong>红线三条——红线在营销表述，不在类目挂载</strong>：
+① <strong>不做儿童营销表述</strong>（手册 14+ 条款）——标题/图片/描述不用 kids/children/toys 等儿童营销词；<strong>但类目可以挂</strong>：dummy13 竞品 63/300 挂在玩具机器人节点（母婴-玩具线，本土量王 DERMIFY 的 9,662 件/月链接就在该节点）；积木玩具节点 CB 也有量（₱238-476 带、件均 27/周）——<strong>兼容件/转售可上，玩具机器人和积木都是 dummy13 副挂候选</strong>；自研婴幼线仍是合规墙（儿童用品安全标准）不入；
+② 不蹭品牌词（标题只用 compatible/原创设计）；
+③ 乐高表述禁用（积木相关只说 building blocks/兼容件）。
+<strong>数据陷阱速查</strong>：三口径分箱不可逐行对照；GMV 是中位估算；导出缺陷四变体（导后先看主类目标签分布）；快反店周数据有效期以周计；累计销量有虚高案例；类目榜位≠主营。</p>
+<div class="section-spacer"></div>
+
+<h2 id="附关键数字卡">附：关键数字卡</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>站点格局</td>
+<td>SG 30.8% / BR 30.1% / PH 14.0% / TW 1.0%（CB 件量份额）</td>
+</tr>
+<tr>
+<td>PH 收藏品线 CB</td>
+<td>人偶公仔 件量 45.4% / GMV 46.8% / 效率 104%</td>
+</tr>
+<tr>
+<td>全平台 CB 增长</td>
+<td>30 日 GMV +23.6% / 件量 +18.8%（新供给 32% 投 PH）</td>
+</tr>
+<tr>
+<td>dummy13 细分市场</td>
+<td>300 竞品 · 月 6.5 万件 · ₱597 万 GMV</td>
+</tr>
+<tr>
+<td>死亡带 / Premium 锚</td>
+<td>₱50-200 禁入 / ₱300-400 实证</td>
+</tr>
+<tr>
+<td>复刻周期</td>
+<td>₱334 → ₱35，数周-数月</td>
+</tr>
+<tr>
+<td>DIY Kit 锚</td>
+<td>₱1,000-1,400（BLOKEES 28.5 件/天）</td>
+</tr>
+<tr>
+<td>单品日销天花板</td>
+<td>₱105 卡 919/天 &gt; ₱334 人偶 392/天 &gt; ₱1,159 积木人 28.5/天</td>
+</tr>
+<tr>
+<td>BR 扩站证据</td>
+<td>CB 61/100 家 · 榜内 86% · 单店 4× · 新店通道开</td>
+</tr>
+</tbody>
+</table>
+<p><em>深度细节与全部原表：KB2046 <code>crossborder/zhixia-data/</code>（模块 01-21 + 整合调研报告）。汇率锚 ₱1≈￥0.108。</em></p>
+    </main>
+  </div>
+
+  <!-- Back to top button -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    title="回到顶部">↑</button>
+
+  <script>
+    // Back-to-top visibility
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('visible', window.scrollY > 400);
+    });
+
+    // Active TOC highlight
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        const link = document.querySelector(`.toc-list a[href="#${e.target.id}"]`);
+        if (link) {
+          if (e.isIntersecting) {
+            document.querySelectorAll('.toc-list a').forEach(a => a.style.color = '');
+            link.style.color = 'var(--accent)';
+            link.style.fontWeight = '500';
+          } else {
+            link.style.color = '';
+            link.style.fontWeight = '';
+          }
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id]').forEach(h => observer.observe(h));
+
+    // --- Theme Group: Collapsible TOC + Smart Collapse ---
+    (function () {
+      const groups = document.querySelectorAll('.toc-group');
+      const toggle = document.getElementById('tocToggle');
+      if (!groups.length) return; // No theme groups, skip
+
+      let smartMode = true;
+
+      // Click to expand/collapse individual groups
+      groups.forEach(g => {
+        const title = g.querySelector('.toc-group-title');
+        if (title) {
+          title.addEventListener('click', () => {
+            g.classList.toggle('collapsed');
+            // If user manually toggles, switch to manual mode
+            if (smartMode && toggle) {
+              smartMode = false;
+              toggle.classList.add('expanded');
+              toggle.querySelector('.toggle-label').textContent = '全部展开';
+            }
+          });
+        }
+      });
+
+      // Toggle button: switch between smart-collapse and all-expanded
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          smartMode = !smartMode;
+          const label = toggle.querySelector('.toggle-label');
+          if (smartMode) {
+            toggle.classList.remove('expanded');
+            label.textContent = '智能折叠';
+            // Trigger smart collapse based on current scroll
+            updateSmartCollapse();
+          } else {
+            toggle.classList.add('expanded');
+            label.textContent = '全部展开';
+            groups.forEach(g => g.classList.remove('collapsed'));
+          }
+        });
+      }
+
+      // Smart collapse: observe section dividers
+      function updateSmartCollapse() {
+        if (!smartMode) return;
+        const dividers = document.querySelectorAll('.section-divider[data-group]');
+        if (!dividers.length) {
+          // fallback: expand all if no dividers
+          groups.forEach(g => g.classList.remove('collapsed'));
+          return;
+        }
+        // Find which section is currently in view
+        const scrollY = window.scrollY + window.innerHeight * 0.25;
+        let activeGroup = null;
+        dividers.forEach(d => {
+          if (d.offsetTop <= scrollY) {
+            activeGroup = d.getAttribute('data-group');
+          }
+        });
+        // If before first divider, show first group
+        if (!activeGroup && dividers.length) {
+          activeGroup = dividers[0].getAttribute('data-group');
+        }
+        groups.forEach(g => {
+          const gid = g.getAttribute('data-group');
+          if (gid === activeGroup) {
+            g.classList.remove('collapsed');
+          } else {
+            g.classList.add('collapsed');
+          }
+        });
+      }
+
+      // Debounced scroll handler for smart collapse
+      let scrollTimer;
+      window.addEventListener('scroll', () => {
+        if (!smartMode) return;
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(updateSmartCollapse, 80);
+      });
+
+      // Initial state: smart collapse
+      if (smartMode) {
+        updateSmartCollapse();
+      }
+    })();
+
+    // --- Mermaid fullscreen zoom/pan ---
+    (function () {
+      let overlay = null;
+      let svgWrap = null;
+      let scale = 1;
+      let tx = 0, ty = 0;
+      let dragging = false;
+      let startX, startY, startTx, startTy;
+
+      function applyTransform() {
+        svgWrap.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      }
+
+      function openOverlay(mermaidEl) {
+        const svg = mermaidEl.querySelector('svg');
+        if (!svg) return;
+
+        overlay = document.createElement('div');
+        overlay.className = 'mermaid-overlay';
+        overlay.innerHTML = `
+          <div class="overlay-controls">
+            <button class="overlay-btn" data-action="zoomin" title="放大">+</button>
+            <button class="overlay-btn" data-action="zoomout" title="缩小">−</button>
+            <button class="overlay-btn" data-action="reset" title="重置">↺</button>
+            <button class="overlay-btn" data-action="close" title="关闭 (Esc)">✕</button>
+          </div>
+          <div class="overlay-svg-wrap"></div>
+          <div class="overlay-hint">滚轮缩放 · 拖拽平移 · Esc 关闭</div>
+        `;
+
+        svgWrap = overlay.querySelector('.overlay-svg-wrap');
+        const cloned = svg.cloneNode(true);
+        cloned.removeAttribute('style');
+        cloned.style.width = svg.getAttribute('width') || svg.viewBox?.baseVal?.width + 'px' || 'auto';
+        cloned.style.height = 'auto';
+        svgWrap.appendChild(cloned);
+
+        // Fit initial scale
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => {
+          const svgRect = cloned.getBoundingClientRect();
+          const vw = window.innerWidth * 0.9;
+          const vh = window.innerHeight * 0.85;
+          scale = Math.min(vw / svgRect.width, vh / svgRect.height, 2);
+          scale = Math.max(scale, 0.2);
+          tx = (window.innerWidth - svgRect.width * scale) / 2;
+          ty = (window.innerHeight - svgRect.height * scale) / 2;
+          applyTransform();
+          overlay.classList.add('visible');
+        });
+
+        // Button controls
+        overlay.querySelector('.overlay-controls').addEventListener('click', (e) => {
+          const action = e.target.closest('[data-action]')?.dataset.action;
+          if (action === 'close') closeOverlay();
+          else if (action === 'zoomin') { zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.3); }
+          else if (action === 'zoomout') { zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1 / 1.3); }
+          else if (action === 'reset') {
+            const r = cloned.getBoundingClientRect();
+            const baseW = r.width / scale;
+            const baseH = r.height / scale;
+            scale = Math.min(window.innerWidth * 0.9 / baseW, window.innerHeight * 0.85 / baseH, 2);
+            scale = Math.max(scale, 0.2);
+            tx = (window.innerWidth - baseW * scale) / 2;
+            ty = (window.innerHeight - baseH * scale) / 2;
+            applyTransform();
+          }
+        });
+
+        // Wheel zoom
+        overlay.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          const factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+          zoomAt(e.clientX, e.clientY, factor);
+        }, { passive: false });
+
+        // Drag pan
+        overlay.addEventListener('mousedown', (e) => {
+          if (e.target.closest('.overlay-controls')) return;
+          dragging = true;
+          overlay.classList.add('dragging');
+          startX = e.clientX; startY = e.clientY;
+          startTx = tx; startTy = ty;
+        });
+        overlay.addEventListener('mousemove', (e) => {
+          if (!dragging) return;
+          tx = startTx + (e.clientX - startX);
+          ty = startTy + (e.clientY - startY);
+          applyTransform();
+        });
+        overlay.addEventListener('mouseup', () => {
+          dragging = false;
+          overlay.classList.remove('dragging');
+        });
+
+        // Touch support
+        let lastTouchDist = 0;
+        overlay.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) {
+            dragging = true;
+            startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+            startTx = tx; startTy = ty;
+          } else if (e.touches.length === 2) {
+            dragging = false;
+            lastTouchDist = Math.hypot(
+              e.touches[1].clientX - e.touches[0].clientX,
+              e.touches[1].clientY - e.touches[0].clientY
+            );
+          }
+        }, { passive: true });
+        overlay.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          if (e.touches.length === 1 && dragging) {
+            tx = startTx + (e.touches[0].clientX - startX);
+            ty = startTy + (e.touches[0].clientY - startY);
+            applyTransform();
+          } else if (e.touches.length === 2) {
+            const dist = Math.hypot(
+              e.touches[1].clientX - e.touches[0].clientX,
+              e.touches[1].clientY - e.touches[0].clientY
+            );
+            if (lastTouchDist) {
+              const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+              const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+              zoomAt(cx, cy, dist / lastTouchDist);
+            }
+            lastTouchDist = dist;
+          }
+        }, { passive: false });
+        overlay.addEventListener('touchend', () => { dragging = false; lastTouchDist = 0; });
+
+        // Esc key
+        document.addEventListener('keydown', onEsc);
+
+        // Click background to close
+        overlay.addEventListener('dblclick', (e) => {
+          if (!e.target.closest('.overlay-controls')) closeOverlay();
+        });
+      }
+
+      function zoomAt(cx, cy, factor) {
+        const newScale = Math.max(0.1, Math.min(scale * factor, 10));
+        const ratio = newScale / scale;
+        tx = cx - ratio * (cx - tx);
+        ty = cy - ratio * (cy - ty);
+        scale = newScale;
+        applyTransform();
+      }
+
+      function closeOverlay() {
+        if (!overlay) return;
+        overlay.classList.remove('visible');
+        setTimeout(() => { overlay.remove(); overlay = null; }, 200);
+        document.removeEventListener('keydown', onEsc);
+      }
+
+      function onEsc(e) {
+        if (e.key === 'Escape') closeOverlay();
+      }
+
+      // Bind click on all mermaid containers (after mermaid renders)
+      const bindClicks = () => {
+        document.querySelectorAll('.mermaid').forEach(el => {
+          if (el.dataset.zoomBound) return;
+          el.dataset.zoomBound = '1';
+          el.addEventListener('click', () => openOverlay(el));
+        });
+      };
+
+      // Run after mermaid finishes rendering
+      if (window.mermaid) {
+        mermaid.run().then(bindClicks).catch(() => setTimeout(bindClicks, 1500));
+      } else {
+        window.addEventListener('load', () => setTimeout(bindClicks, 1000));
+      }
+    })();
+  </script>
+</body>
+
+</html>
